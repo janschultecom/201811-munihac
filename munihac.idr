@@ -79,7 +79,9 @@ idRow {n = (S k)} (S j) {prf = (LTESucc x)} = 0 :: idRow j
 
 idMatHelper : (i:Nat) -> ( prf : LTE i n ) ->  Matrix i n
 idMatHelper Z LTEZero = []
-idMatHelper (S left) (LTESucc x) = ?idMatHelper_rhs_2
+idMatHelper (S left) (LTESucc x) = idRow left :: idMatHelper left (lteSuccRight x)
 
+idMat : Matrix n n 
+idMat {n} = reverse $ idMatHelper n lteRefl 
 
 --mult : Matrix 2 4 -> Matrix 4 3 -> Matrix 2 3 
