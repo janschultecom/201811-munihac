@@ -72,17 +72,14 @@ multMat [] (x :: xs) = []
 multMat (row :: rows) y = let transposed = transposeMat y in
                        multVectMat row transposed :: multMat rows y --?x --multVect row transposed
 
-idRow : (n:Nat) -> (i:Nat) -> Vect (i+n) Int 
-idRow {n = Z} Z = []
-idRow {n = Z} (S k) = let result : Vect k Int = replicate k 0 in 
-                          rewrite plusZeroRightNeutral k in 
-                                  1 :: result
-idRow {n = (S k)} i = let x : Vect (S (i+k)) Int = 0 :: idRow i in
-                          rewrite sym (plusSuccRightSucc i k) in 
-                          x 
+idRow : (i:Nat) -> { auto prf: LT i n } ->  Vect n Int 
+idRow {n = Z} i = []
+idRow {n = (S k)} Z = 1 :: replicate k 0 
+idRow {n = (S k)} (S j) {prf = (LTESucc x)} = 0 :: idRow j
 
-idMat : (n:Nat) -> Matrix n n
-idMat n = map idRow ?x -- $ scanl1 (+) (replicate n 1) 
+idMatHelper : (i:Nat) -> ( prf : LTE i n ) ->  Matrix i n
+idMatHelper Z LTEZero = []
+idMatHelper (S left) (LTESucc x) = ?idMatHelper_rhs_2
 
 
 --mult : Matrix 2 4 -> Matrix 4 3 -> Matrix 2 3 
